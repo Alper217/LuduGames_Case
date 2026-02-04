@@ -1,7 +1,7 @@
 # Interaction System - Alper Kocasalih
 
 ## Kurulum
-- **Unity Versiyonu:** 2022.3.x (Veya projenin açıldığı stabil sürüm)
+- **Unity Versiyonu:** 2022.3.61f1 (Veya projenin açıldığı stabil sürüm)
 - **Kurulum:**
   1. Projeyi Unity Hub üzerinden açın.
   2. `Assets/AlperKocasalih_Case_Project/Scenes/TestScene` sahnesini açın.
@@ -17,12 +17,13 @@
 - **Test Senaryoları:**
   1. **Kapı (Door):** Kilitli kapıya gidin. "Locked" uyarısını görün.
   2. **Anahtar (Key):** Yerdeki anahtarı `E` ile alın. Envantere eklenir.
-  3. **Yatak (Bed):** Yatağa gidin ve `E` tuşuna basılı tutun. Progress bar dolunca ekran kararır (Sleep).
-  4. **Sandık (Chest):**
+  3. **Sandık (Chest):**
      - Anahtarsız deneyin (Açılmaz).
      - Etraftaki ilgili anahtarı bulun.
-     - Sandığa gelip `E` tuşuna basın. Kilit açılır ve kapak animasyonla kalkar.
-  5. **Işık Anahtarı (Switch):** Duvardaki anahtara basın, ışıkların açılıp kapandığını gözlemleyin.
+     - Sandığa gelip `E` tuşuna basın. Kapının anahtarını sandıktan alın ve kapıya yönelin.
+  4. **Işık Anahtarı (Switch):** Duvardaki anahtara basın, ışıkların açılıp kapandığını gözlemleyin.
+  5. **Kapı (Door):** Kilitli kapıya gidin, `E`tuşuna basın ve kilitli kapıyı açın.
+  6. **Yatak (Bed):** Yatağa gidin ve `E` tuşuna basılı tutun. Progress bar dolunca ekran kararır (Sleep).
 
 ## Mimari Kararlar
 Bu projede **OOP (Nesne Yönelimli Programlama)** prensipleri ve **Observer Pattern** kullanılmıştır.
@@ -57,7 +58,7 @@ Proje geliştirilirken Ludu Arts coding convention dokümanlarına sadık kalın
 
 ## Bilinen Limitasyonlar
 - **Animation:** Animator yerine kod tabanlı (Coroutine/Tween) basit animasyonlar tercih edildi. (Zaman yönetimi açısından)
-- **UI:** Envanter UI'ı şu an için basit ikonlardan oluşmaktadır, sürükle-bırak veya detay penceresi yoktur.
+- **UI:** Envanter UI'ı şu an için Unity'nin basit ikonlarından oluşmaktadır, sürükle-bırak veya detay penceresi yoktur. Öncelik olarak basit bir UI tasarımı yapıldı.
 
 ## Ekstra Özellikler (Bonus)
 - **SphereCast Detection:** Oyuncunun etkileşim konforunu artırmak için Raycast yerine SphereCast kullanıldı.
