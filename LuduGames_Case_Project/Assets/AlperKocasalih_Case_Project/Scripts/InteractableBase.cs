@@ -1,24 +1,59 @@
 using UnityEngine;
 
-public abstract class InteractableBase : MonoBehaviour, IInteractable
+namespace AlperKocasalih_Case_Project.Scripts
 {
-    [Header("Base Settings")]
-    [SerializeField] protected string m_BaseInteractionText = "Interact";
-
-    // Sanal (Virtual) property'ler: Alt sınıflar bunları ezebilir (override).
-    public virtual float InteractionDuration => 0f;
-    public virtual bool CanInteract => true;
-
-    // Interface'deki InteractionText property'si
-    // Default olarak GetInteractionText()'ten dönen değeri verir.
-    public string InteractionText => GetInteractionText();
-
-    // Soyut (Abstract) metot: Her alt sınıf kendi etkileşimini YAZMAK ZORUNDA.
-    public abstract void Interact();
-
-    // Sanal metot: İstenirse text dinamik olarak değiştirilebilir (Örn: Kapı Aç/Kapa)
-    public virtual string GetInteractionText()
+    /// <summary>
+    /// Base class for all interactable objects.
+    /// Implements the IInteractable interface and provides common functionality.
+    /// </summary>
+    public abstract class InteractableBase : MonoBehaviour, IInteractable
     {
-        return m_BaseInteractionText;
+        #region Fields
+
+        [Header("Base Settings")]
+        [Tooltip("Text to display when the player looks at this object.")]
+        [SerializeField] protected string m_BaseInteractionText = "Interact";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Duration required to hold the interaction key.
+        /// Returns 0 for instant interactions.
+        /// </summary>
+        public virtual float InteractionDuration => 0f;
+
+        /// <summary>
+        /// Determines if the object is currently interactable.
+        /// </summary>
+        public virtual bool CanInteract => true;
+
+        /// <summary>
+        /// Gets the text to display for interaction.
+        /// </summary>
+        public string InteractionText => GetInteractionText();
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Performs the interaction logic.
+        /// Must be implemented by derived classes.
+        /// </summary>
+        public abstract void Interact();
+
+        /// <summary>
+        /// Retrieves the interaction text.
+        /// Can be overridden to provide dynamic text.
+        /// </summary>
+        /// <returns>The interaction display text.</returns>
+        public virtual string GetInteractionText()
+        {
+            return m_BaseInteractionText;
+        }
+
+        #endregion
     }
 }

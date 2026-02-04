@@ -1,87 +1,151 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 
-public class PlayerInteraction : MonoBehaviour
+namespace AlperKocasalih_Case_Project.Scripts
 {
-    [Header("Settings")]
-    [SerializeField] private float m_Distance = 3f;
-    [SerializeField] private LayerMask m_LayerMask;
-    [SerializeField] private Transform m_Camera;
-
-    [Header("UI Settings")]
-    [SerializeField] private TextMeshProUGUI m_InteractionTextUI;
-    [SerializeField] private Image m_InteractionProgressImage;
-    [SerializeField] private float m_InteractionProgress = 0f;
-
-    private IInteractable m_CurrentTarget;
-    private float m_Timer = 0f;
-    private float radius = .5f;
-
-    private void Start()
+    /// <summary>
+    /// Handles player interaction with the world using SphereCast.
+    /// Manages UI feedback for interactions.
+    /// </summary>
+    public class PlayerInteraction : MonoBehaviour
     {
-        // Set camera automatically if not assigned
-        if (m_Camera == null) m_Camera = Camera.main.transform;
-        if (m_InteractionTextUI != null) m_InteractionTextUI.text = "";
-    }
+        #region Fields
 
-    private void Update()
-    {
-        Scan();
-        HandleInput();
-    }
+        [Header("Detection Settings")]
+        [Tooltip("Max distance to detect interactable objects.")]
+        [SerializeField] private float m_Distance = 3f;
 
-    private void Scan()
-    {
-        if (Physics.SphereCast(m_Camera.position, radius, m_Camera.forward, out RaycastHit hit, m_Distance, m_LayerMask))
+        [Tooltip("Radius of the sphere cast for detection.")]
+        [SerializeField] private float m_SphereCastRadius = 0.5f;
+
+        [Tooltip("Layer mask to filter interactable objects.")]
+        [SerializeField] private LayerMask m_LayerMask;
+
+        [Header("UI Settings")]
+        [Tooltip("Text element to display interaction prompt.")]
+        [SerializeField] private TextMeshProUGUI m_InteractionText;
+
+        [Tooltip("Progress bar image for hold interactions.")]
+        [SerializeField] private Image m_ProgressBar;
+
+        [Tooltip("Transform of the camera.")]
+        [SerializeField] private Transform m_Camera;
+
+        private IInteractable m_CurrentTarget;
+        private float m_Timer = 0f;
+
+        #endregion
+
+        #region Unity Methods
+
+        private void Start()
         {
-            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-            if (interactable != null && interactable.CanInteract)
+             if (m_Camera == null) m_Camera = Camera.main.transform;
+             if(m_InteractionText != null) m_InteractionText.gameObject.SetActive(false);
+             if(m_ProgressBar != null) m_ProgressBar.gameObject.SetActive(false);
+        }
+
+        private void Update()
+        {
+            Scan();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Scans for interactable objects using SphereCast.
+        /// Handles input processing and UI updates.
+        /// </summary>
+        private void Scan()
+        {
+            if (Physics.SphereCast(m_Camera.position, m_SphereCastRadius, m_Camera.forward, out RaycastHit hit, m_Distance, m_LayerMask))
             {
-                if (m_CurrentTarget != interactable)
+                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+
+                if (interactable != null && interactable.CanInteract)
                 {
                     m_CurrentTarget = interactable;
-                    if (m_InteractionTextUI != null) 
-                        m_InteractionTextUI.text = m_CurrentTarget.GetInteractionText();
+                    m_InteractionText.text = interactable.InteractionText;
+                    m_InteractionText.gameObject.SetActive(true);
+
+                    HandleInput(interactable);
                 }
-                return;
-            }
-        }
-        if (m_CurrentTarget != null)
-        {
-            m_CurrentTarget = null;
-            if (m_InteractionTextUI != null) m_InteractionTextUI.text = "";
-        }
-        m_Timer = 0f;
-    }
-
-    private void HandleInput()
-    {
-        if (m_CurrentTarget == null) return;
-
-        if (Input.GetKey(KeyCode.E))
-        {
-            if (m_CurrentTarget.InteractionDuration <= 0)
-            {
-                if (Input.GetKeyDown(KeyCode.E)) m_CurrentTarget.Interact();
+                else
+                {
+                    ClearInteraction();
+                }
             }
             else
             {
-                m_InteractionProgress += Time.deltaTime;
-                m_InteractionProgressImage.fillAmount = m_InteractionProgress / m_CurrentTarget.InteractionDuration;
-                m_Timer += Time.deltaTime;
-                if (m_Timer >= m_CurrentTarget.InteractionDuration)
+                ClearInteraction();
+            }
+        }
+
+        /// <summary>
+        /// Handles the player input for interaction.
+        /// </summary>
+        /// <param name="interactable">The target interactable object.</param>
+        private void HandleInput(IInteractable interactable)
+        {
+            if (Input.GetKey(KeyCode.E))
+            {
+                if (interactable.InteractionDuration > 0f)
                 {
-                    m_CurrentTarget.Interact();
-                    m_Timer = 0f;
+                    m_Timer += Time.deltaTime;
+                    
+                    // Update progress bar
+                    if (m_ProgressBar != null)
+                    {
+                        m_ProgressBar.fillAmount = m_Timer / interactable.InteractionDuration;
+                        m_ProgressBar.gameObject.SetActive(true);
+                    }
+
+                    if (m_Timer >= interactable.InteractionDuration)
+                    {
+                        interactable.Interact();
+                        m_Timer = 0f; // Reset timer after success
+                        if (m_ProgressBar != null) m_ProgressBar.fillAmount = 0f;
+                    }
+                }
+                else
+                {
+                    // Instant interaction (ensure single trigger)
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        interactable.Interact();
+                    }
+                }
+            }
+            else
+            {
+                // Reset timer if key is released
+                m_Timer = 0f;
+                if (m_ProgressBar != null)
+                {
+                    m_ProgressBar.fillAmount = 0f;
+                    m_ProgressBar.gameObject.SetActive(false);
                 }
             }
         }
-        else
+
+        /// <summary>
+        /// Clears the current interaction state and UI.
+        /// </summary>
+        private void ClearInteraction()
         {
-            m_InteractionProgress = 0f;
-            m_InteractionProgressImage.fillAmount = 0f;
+            m_CurrentTarget = null;
+            if(m_InteractionText != null) m_InteractionText.gameObject.SetActive(false);
             m_Timer = 0f;
+            if (m_ProgressBar != null)
+            {
+                m_ProgressBar.gameObject.SetActive(false);
+                m_ProgressBar.fillAmount = 0f;
+            }
         }
+
+        #endregion
     }
 }

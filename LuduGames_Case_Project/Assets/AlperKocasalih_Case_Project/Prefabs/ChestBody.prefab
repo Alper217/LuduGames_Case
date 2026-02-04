@@ -341,3 +341,6 @@ MonoBehaviour:
   m_Speed: 2
   m_OpenAngle: 180
   m_RequiredKey: {fileID: 11400000, guid: 7bb447f01672caa449902269d7f4c37c, type: 2}
+  OnChestOpened:
+    m_PersistentCalls:
+      m_Calls: []

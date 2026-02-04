@@ -1,18 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
-public class ItemData : ScriptableObject
+namespace AlperKocasalih_Case_Project.Scripts
 {
-    public string itemName;
-    public Sprite itemIcon;
-    public ItemType itemType;
-}
+    /// <summary>
+    /// Represents the data for an inventory item.
+    /// </summary>
+    [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
+    public class ItemData : ScriptableObject
+    {
+        [Tooltip("The name of the item.")]
+        public string ItemName;
 
-public enum ItemType
-{
-    DoorKey,
-    ChestKey,
-    Other
+        [Tooltip("The icon to display in the UI.")]
+        public Sprite ItemIcon;
+
+        [Tooltip("The type of the item.")]
+        public ItemType ItemType;
+    }
+
+    /// <summary>
+    /// Defines the types of items available.
+    /// </summary>
+    public enum ItemType
+    {
+        DoorKey,
+        ChestKey,
+        Other
+    }
 }

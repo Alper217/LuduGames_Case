@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7edba27190b2bc545aa45955b1548ce3, type: 3}
   m_Name: ChestKey
   m_EditorClassIdentifier: 
-  itemName: Chest Key
-  itemIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
-  itemType: 1
+  ItemName: ChestKey
+  ItemIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  ItemType: 1

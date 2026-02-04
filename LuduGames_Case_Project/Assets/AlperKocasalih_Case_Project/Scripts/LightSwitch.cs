@@ -1,56 +1,56 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LightSwitch : MonoBehaviour, IInteractable
+namespace AlperKocasalih_Case_Project.Scripts
 {
-    [SerializeField] private float m_InteractionDuration = 0f;
-    [SerializeField] private bool m_CanInteract = true;
-    [SerializeField] private string m_InteractionText = "Press [E] to Switch Light";
-    [SerializeField] private List<GameObject> m_Light;
-
-    private bool m_IsLightOn = false;
-    public float InteractionDuration { get => m_InteractionDuration; }
-    public bool CanInteract { get => m_CanInteract; }
-    public string InteractionText { get => m_InteractionText; }
-
-    void Start()
+    /// <summary>
+    /// Represents a light switch that toggles one or more lights.
+    /// </summary>
+    public class LightSwitch : InteractableBase
     {
-        if(m_Light != null)
+        #region Fields
+
+        [Header("Light Settings")]
+        [Tooltip("List of light objects to toggle.")]
+        [SerializeField] private List<GameObject> m_Lights;
+
+        [Tooltip("Interaction text.")]
+        [SerializeField] private string m_InteractionText = "Press [E] to Switch Light";
+
+        [Tooltip("Is the light currently on?")]
+        private bool m_IsLightOn = false;
+
+        #endregion
+
+        #region Public Methods
+
+        public override string GetInteractionText() => m_InteractionText;
+
+        public override void Interact()
         {
-            foreach (var light in m_Light)
+            ToggleLights();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void ToggleLights()
+        {
+            m_IsLightOn = !m_IsLightOn;
+
+            if (m_Lights != null)
             {
-                light.SetActive(false);
+                foreach (var light in m_Lights)
+                {
+                    if (light != null)
+                    {
+                        light.SetActive(m_IsLightOn);
+                    }
+                }
             }
         }
-    }
 
-    public void Interact()
-    {
-       Debug.Log("Light Switch Interacted");
-       SwitchLight();
+        #endregion
     }
-    private void SwitchLight()
-    {   
-        if(m_Light != null)
-        {
-            if(m_IsLightOn)
-            {
-                    foreach (var light in m_Light)
-                {
-                    light.SetActive(false);
-                }
-                m_IsLightOn = false;
-            }
-            else
-            {
-                foreach (var light in m_Light)
-                {
-                    light.SetActive(true);
-                }
-                m_IsLightOn = true;
-            }
-        }
-    }
-    public string GetInteractionText() { return InteractionText; }
 }
