@@ -16,6 +16,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private IInteractable m_CurrentTarget;
     private float m_Timer = 0f;
+    private float radius = .5f;
 
     private void Start()
     {
@@ -32,8 +33,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Scan()
     {
-        Ray ray = new Ray(m_Camera.position, m_Camera.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, m_Distance, m_LayerMask))
+        if (Physics.SphereCast(m_Camera.position, radius, m_Camera.forward, out RaycastHit hit, m_Distance, m_LayerMask))
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
             if (interactable != null && interactable.CanInteract)

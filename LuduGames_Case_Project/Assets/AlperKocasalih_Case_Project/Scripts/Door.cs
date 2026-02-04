@@ -13,6 +13,7 @@ public class Door : InteractableBase
     [SerializeField] private bool m_IsLocked = true; // Kapı kilitli başlasın mı?
     [SerializeField] private string m_LockedText = "Door is Locked (Key Required)";
     [SerializeField] private float m_UnlockDuration = 2f; // Kilidi açmak için basılı tutma süresi
+    [SerializeField] private ItemData m_RequiredKey; 
 
     private bool m_IsOpen = false;
     private Quaternion m_ClosedRotation;
@@ -29,7 +30,7 @@ public class Door : InteractableBase
             if (m_IsLocked)
             {
                 // Anahtar varsa süre gönder, yoksa anında tepki ver
-                return GameState.DoorKey ? m_UnlockDuration : 0f;
+                return InventoryManager.Instance.HasDoorKey ? m_UnlockDuration : 0f;
             }
             
             // 2. Kilit açıldıktan sonra kapı anında (0 sn) açılsın
@@ -42,7 +43,7 @@ public class Door : InteractableBase
     {
         if (m_IsLocked)
         {
-            if (GameState.DoorKey)
+            if (InventoryManager.Instance.HasDoorKey)
             {
                 Debug.Log("Unlocking the door...");
                 m_IsLocked = false; // Kilidi aç
@@ -65,7 +66,7 @@ public class Door : InteractableBase
     {
         if (m_IsLocked)
         {
-            return GameState.DoorKey ? "Press [E] to Unlock Door" : m_LockedText;
+            return InventoryManager.Instance.HasDoorKey ? "Press [E] to Unlock Door" : m_LockedText;
         }
         return m_IsOpen ? "Press [E] to Close Door" : "Press [E] to Open Door";
     }
@@ -82,6 +83,7 @@ public class Door : InteractableBase
         m_IsOpen = !m_IsOpen;
         Quaternion target = m_IsOpen ? m_OpenRotation : m_ClosedRotation;
         StartCoroutine(RotateDoor(target));
+        InventoryManager.Instance.RemoveItem(m_RequiredKey);
     }
 
     private IEnumerator RotateDoor(Quaternion targetRotation)

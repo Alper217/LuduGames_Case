@@ -7,7 +7,7 @@ public class LightSwitch : MonoBehaviour, IInteractable
     [SerializeField] private float m_InteractionDuration = 0f;
     [SerializeField] private bool m_CanInteract = true;
     [SerializeField] private string m_InteractionText = "Press [E] to Switch Light";
-    [SerializeField] private GameObject m_Light;
+    [SerializeField] private List<GameObject> m_Light;
 
     private bool m_IsLightOn = false;
     public float InteractionDuration { get => m_InteractionDuration; }
@@ -18,7 +18,10 @@ public class LightSwitch : MonoBehaviour, IInteractable
     {
         if(m_Light != null)
         {
-            m_Light.SetActive(false);
+            foreach (var light in m_Light)
+            {
+                light.SetActive(false);
+            }
         }
     }
 
@@ -33,12 +36,18 @@ public class LightSwitch : MonoBehaviour, IInteractable
         {
             if(m_IsLightOn)
             {
-                m_Light.SetActive(false);
+                    foreach (var light in m_Light)
+                {
+                    light.SetActive(false);
+                }
                 m_IsLightOn = false;
             }
             else
             {
-                m_Light.SetActive(true);
+                foreach (var light in m_Light)
+                {
+                    light.SetActive(true);
+                }
                 m_IsLightOn = true;
             }
         }

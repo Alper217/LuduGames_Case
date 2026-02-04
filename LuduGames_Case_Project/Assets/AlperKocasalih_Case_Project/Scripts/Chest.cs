@@ -15,6 +15,9 @@ public class Chest : InteractableBase
     [SerializeField] private float m_Speed = 2f;
     [SerializeField] private float m_OpenAngle = 180f;
 
+    [Header("Key Settings")]
+    [SerializeField] private ItemData m_RequiredKey; 
+
     private Quaternion m_ClosedRotation;
     private Quaternion m_OpenRotation;
 
@@ -24,7 +27,7 @@ public class Chest : InteractableBase
         {
             if (m_IsLocked)
             {
-                return GameState.ChestKey ? m_UnlockDuration : m_OpenDuration;
+                return InventoryManager.Instance.HasChestKey ? m_UnlockDuration : m_OpenDuration;
             }
             return m_OpenDuration;
         }
@@ -33,7 +36,7 @@ public class Chest : InteractableBase
     {
         if (m_IsLocked)
         {
-            return GameState.ChestKey ? m_UnlockedText: m_LockedText;
+            return InventoryManager.Instance.HasChestKey ? m_UnlockedText: m_LockedText;
         }
         return m_IsOpen ?  "Press [E] to Close Chest" :  "Press [E] to Open Chest";
     }
@@ -41,7 +44,7 @@ public class Chest : InteractableBase
     {
         if (m_IsLocked)
         {
-            if (GameState.ChestKey)
+            if (InventoryManager.Instance.HasChestKey)
             {
                 Debug.Log("Unlocking the chest...");
                 m_IsLocked = false; // Kilidi aç
@@ -79,7 +82,7 @@ public class Chest : InteractableBase
         m_IsLocked = true;
         m_IsOpen = false;
         Quaternion target = m_IsOpen ? m_OpenRotation : m_ClosedRotation;
-        GameState.ChestKey = false;
+        InventoryManager.Instance.RemoveItem(m_RequiredKey);
         StartCoroutine(RotateChest(target));
     }
     private IEnumerator RotateChest(Quaternion targetRotation)
