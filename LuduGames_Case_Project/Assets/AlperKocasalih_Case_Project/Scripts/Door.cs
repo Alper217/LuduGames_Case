@@ -5,7 +5,7 @@ public class Door : MonoBehaviour, IInteractable
 {
     [SerializeField] private float m_InteractionDuration = 0f;
     [SerializeField] private bool m_CanInteract = true;
-    [SerializeField] private string m_InteractionText = "Press [E] to Open Door";
+    [SerializeField] private string m_InteractionText = "Press [E] to Interact with Door";
 
     [SerializeField] private float m_OpenAngle = 90f; 
     [SerializeField] private float m_Speed = 2f;      
