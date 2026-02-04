@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("UI Settings")]
     [SerializeField] private TextMeshProUGUI m_InteractionTextUI;
+    [SerializeField] private Image m_InteractionProgressImage;
+    [SerializeField] private float m_InteractionProgress = 0f;
 
     private IInteractable m_CurrentTarget;
     private float m_Timer = 0f;
@@ -64,6 +67,8 @@ public class PlayerInteraction : MonoBehaviour
             }
             else
             {
+                m_InteractionProgress += Time.deltaTime;
+                m_InteractionProgressImage.fillAmount = m_InteractionProgress / m_CurrentTarget.InteractionDuration;
                 m_Timer += Time.deltaTime;
                 if (m_Timer >= m_CurrentTarget.InteractionDuration)
                 {
@@ -74,6 +79,8 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
+            m_InteractionProgress = 0f;
+            m_InteractionProgressImage.fillAmount = 0f;
             m_Timer = 0f;
         }
     }
