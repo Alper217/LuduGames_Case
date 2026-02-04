@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 335940763788776692}
   - component: {fileID: 1413923160465222589}
   m_Layer: 6
-  m_Name: Door
+  m_Name: p_Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 5167
+  m_VersionIndex: 5176
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

@@ -22,15 +22,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a0b1a5153362cf4396a095cf5f114aa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.8409
+      value: -8.864733
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a0b1a5153362cf4396a095cf5f114aa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.284
+      value: -7.338446
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a0b1a5153362cf4396a095cf5f114aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.469
+      value: 7.3125505
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9a0b1a5153362cf4396a095cf5f114aa, type: 3}
       propertyPath: m_LocalRotation.w
@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 03c51cde87a18f34dadccee3b5950d69, type: 2}
     - target: {fileID: 919132149155446097, guid: 9a0b1a5153362cf4396a095cf5f114aa, type: 3}
       propertyPath: m_Name
-      value: Light_Switcher
+      value: p_Light_Switcher
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9a0b1a5153362cf4396a095cf5f114aa, type: 3}
       propertyPath: m_Layer
@@ -126,7 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16f21c39d207742409c691c245b1a453, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InteractionDuration: 0
-  m_CanInteract: 1
+  m_BaseInteractionText: Interact
+  m_Lights:
+  - {fileID: 0}
+  - {fileID: 0}
   m_InteractionText: Press [E] to  Door
-  m_Light: {fileID: 0}
