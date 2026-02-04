@@ -4,5 +4,6 @@ using UnityEngine;
 
 public static class GameState
 {
-    public static bool HasKey = false; // Oyuncunun anahtarı var mı?
+    public static bool ChestKey = false; // Oyuncunun anahtarı var mı?
+    public static bool DoorKey = false; // Oyuncunun anahtarı var mı?
 }

@@ -3,46 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Bed : MonoBehaviour, IInteractable
+public class Bed : InteractableBase
 {
-    [SerializeField] private float m_InteractionDuration = 0f;
-    [SerializeField] private bool m_CanInteract = true;
-    [SerializeField] private string m_InteractionText = "Press and hold [E] to Sleep (Save your game)";
+    [Header("Bed Settings")]
+    [SerializeField] private float m_InteractionDuration = 2f; // Yatağa yatmak biraz zaman alsın (basılı tutma)
+    [SerializeField] private string m_InteractionText = "Press and hold [E] to Sleep (Save Game)";
 
     [Header("Fade Settings")]
     [SerializeField] private Image m_FadeImage;
-    [SerializeField] private float m_DefaultDuration = 1.0f;
+    [SerializeField] private float m_FadeDuration = 1.0f;
 
-    public float InteractionDuration { get => m_InteractionDuration; }
-    public bool CanInteract { get => m_CanInteract; }
-    public string InteractionText { get => m_InteractionText; }
-    public void Interact()
+    // OVERRIDE EDİYORUZ: Kendi özel değerlerimizi gönderiyoruz.
+    public override float InteractionDuration => m_InteractionDuration;
+    public override string GetInteractionText() => m_InteractionText;
+    
+    // CanInteract yazmama gerek yok, zaten Base Class'ta "true" geliyor. Kod azaldı!
+    
+    public override void Interact()
     {
+        Debug.Log("Interacting with Bed...");
         SaveGame();
     }
-    public void SaveGame()
+
+    private void SaveGame()
     {   
-        Debug.Log("Game Saved");
-        //SaveGameData()
-        StartCoroutine(FadeSequence());
-
-    }
-
-    private void SaveGameData()
-    {
-        //Can Add Save game data here
+        Debug.Log("Game Saved!");
+        // SaveGameData(); // İleride buraya kayıt kodları gelecek
+        if (m_FadeImage != null)
+        {
+            StartCoroutine(FadeSequence());
+        }
+        else
+        {
+            Debug.LogWarning("Fade Image is assigned! Cannot fade screen.");
+        }
     }
 
     private IEnumerator FadeSequence()
     {
-        // 1. Kararma (Fade Out)
-        yield return StartCoroutine(Fade(1f, m_DefaultDuration));
+        // 1. Ekranı Karart
+        yield return StartCoroutine(Fade(1f, m_FadeDuration));
             
-        // 2. Tam karanlıkta bekleme (Opsiyonel)
-        yield return new WaitForSeconds(0.5f);
+        // 2. Karanlıkta biraz bekle (Uyuyor hissi)
+        yield return new WaitForSeconds(1f);
             
-        // 3. Aydınlanma (Fade In)
-        yield return StartCoroutine(Fade(0f, m_DefaultDuration));
+        // 3. Ekranı Aydınlat
+        yield return StartCoroutine(Fade(0f, m_FadeDuration));
     }
 
     private IEnumerator Fade(float targetAlpha, float duration)
@@ -61,7 +67,10 @@ public class Bed : MonoBehaviour, IInteractable
                 
             yield return null;
         }
+        
+        // Emin olmak için son değeri ata
+        Color finalColor = m_FadeImage.color;
+        finalColor.a = targetAlpha;
+        m_FadeImage.color = finalColor;
     }
-
-    public string GetInteractionText() { return InteractionText; }
 }

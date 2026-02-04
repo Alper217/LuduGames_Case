@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class Door : MonoBehaviour, IInteractable
+// ARTIK IInteractable yerine InteractableBase'den miras alıyoruz.
+public class Door : InteractableBase
 {
     [Header("Basic Settings")]
     [SerializeField] private float m_Speed = 2f;
@@ -17,37 +18,31 @@ public class Door : MonoBehaviour, IInteractable
     private Quaternion m_ClosedRotation;
     private Quaternion m_OpenRotation;
 
-    // Interface Gereksinimleri
-    public float InteractionDuration 
-{
-    get 
+    // BASE CLASS OVERRIDES
+    // IInteractable implementasyonu yerine "override" yazıyoruz.
+    
+    public override float InteractionDuration 
     {
-        // 1. Kapı kilitli mi?
-        if (m_IsLocked)
+        get 
         {
-            // Anahtarımız varsa 2 saniye beklemesi için süre gönderiyoruz, 
-            // Anahtar yoksa anında "Kilitli" uyarısı vermesi için 0 döndürüyoruz.
-            return GameState.HasKey ? m_UnlockDuration : 0f;
+            // 1. Kapı kilitli mi?
+            if (m_IsLocked)
+            {
+                // Anahtar varsa süre gönder, yoksa anında tepki ver
+                return GameState.DoorKey ? m_UnlockDuration : 0f;
+            }
+            
+            // 2. Kilit açıldıktan sonra kapı anında (0 sn) açılsın
+            return m_Duration; 
         }
-        
-        // 2. Kilit açıldıktan sonra kapı anında (0 sn) açılsın
-        return m_Duration; 
-    }
-}
-    public bool CanInteract => true;
-    public string InteractionText => GetInteractionText();
-
-    private void Start()
-    {
-        m_ClosedRotation = transform.rotation;
-        m_OpenRotation = m_ClosedRotation * Quaternion.Euler(0, m_OpenAngle, 0);
     }
 
-    public void Interact()
+    // Interact fonksiyonunu override ediyoruz
+    public override void Interact()
     {
         if (m_IsLocked)
         {
-            if (GameState.HasKey)
+            if (GameState.DoorKey)
             {
                 Debug.Log("Unlocking the door...");
                 m_IsLocked = false; // Kilidi aç
@@ -63,6 +58,22 @@ public class Door : MonoBehaviour, IInteractable
 
         // 2. Kilidi açıksa normal aç/kapa yap
         ExecuteRotation();
+    }
+
+    // Text fonksiyonunu override ediyoruz
+    public override string GetInteractionText()
+    {
+        if (m_IsLocked)
+        {
+            return GameState.DoorKey ? "Press [E] to Unlock Door" : m_LockedText;
+        }
+        return m_IsOpen ? "Press [E] to Close Door" : "Press [E] to Open Door";
+    }
+
+    private void Start()
+    {
+        m_ClosedRotation = transform.rotation;
+        m_OpenRotation = m_ClosedRotation * Quaternion.Euler(0, m_OpenAngle, 0);
     }
 
     private void ExecuteRotation()
@@ -81,14 +92,5 @@ public class Door : MonoBehaviour, IInteractable
             yield return null;
         }
         transform.rotation = targetRotation;
-    }
-
-    public string GetInteractionText()
-    {
-        if (m_IsLocked)
-        {
-            return GameState.HasKey ? "Press [E] to Unlock Door" : m_LockedText;
-        }
-        return m_IsOpen ? "Press [E] to Close Door" : "Press [E] to Open Door";
     }
 }
